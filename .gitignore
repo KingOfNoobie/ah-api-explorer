@@ -1,0 +1,22 @@
+# Dependencies & build
+node_modules/
+npm-debug.log*
+.DS_Store
+Thumbs.db
+
+# Secrets & local session
+data/session.json
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+credentials.json
+
+# Upstream OpenAPI clone (vendored copy lives in spec/)
+Albert-Heijn-OpenAPI/
+
+# IDE / OS
+.idea/
+.vscode/
+*.swp

@@ -1,0 +1,11 @@
+{
+  "domain": "albert_heijn",
+  "name": "Albert Heijn Explorer",
+  "codeowners": ["@ah-explorer"],
+  "config_flow": true,
+  "documentation": "https://github.com/NickBouwhuis/Albert-Heijn-OpenAPI",
+  "integration_type": "service",
+  "iot_class": "cloud_polling",
+  "version": "2.0.0",
+  "requirements": ["aiohttp>=3.9.0"]
+}

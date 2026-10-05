@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AH API Explorer</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-icon">AH</div>
+        <div>
+          <h1>API Explorer</h1>
+          <p>Albert Heijn OpenAPI</p>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <button type="button" class="active" data-page="dashboard-page">Start</button>
+        <button type="button" data-page="mijn-ah-page">Mijn AH</button>
+        <button type="button" data-page="financieel-page">Financieel</button>
+        <button type="button" data-page="lijst-page">Lijst</button>
+        <button type="button" data-page="bonus-page">Bonus</button>
+        <button type="button" data-page="koopjes-page">Koopjes</button>
+        <button type="button" data-page="hass-page">Home Assistant</button>
+        <button type="button" data-page="login-page">Inloggen</button>
+        <button type="button" data-page="token-wizard-page">Token stappenplan</button>
+        <button type="button" data-page="swagger-page">Swagger UI</button>
+        <button type="button" data-page="help-page">Hulp</button>
+      </nav>
+
+      <div class="sidebar-footer">
+        Gebaseerd op
+        <a href="https://github.com/NickBouwhuis/Albert-Heijn-OpenAPI" target="_blank" rel="noopener" style="color:#7dd3fc">
+          NickBouwhuis/Albert-Heijn-OpenAPI
+        </a>
+      </div>
+    </aside>
+
+    <main class="main">
+      <section id="dashboard-page" class="page active">
+        <div class="hero">
+          <h2>Welkom bij de AH API Explorer</h2>
+          <p id="hero-text">
+            Log eenmalig in met je AH-account. Tokens worden automatisch opgeslagen en vernieuwd —
+            daarna kun je direct Swagger UI gebruiken.
+          </p>
+        </div>
+
+        <div class="stats">
+          <div class="stat-card">
+            <strong id="stat-endpoints">…</strong>
+            <span>API endpoints</span>
+          </div>
+          <div class="stat-card">
+            <strong id="stat-tags">11</strong>
+            <span>Categorieën</span>
+          </div>
+          <div class="stat-card">
+            <strong id="stat-server">api.ah.nl</strong>
+            <span>API server</span>
+          </div>
+          <div class="stat-card">
+            <div id="token-status"></div>
+            <span style="margin-top:0.5rem;display:block">Authenticatie</span>
+          </div>
+        </div>
+
+        <div class="card" id="user-card" hidden>
+          <h3>Ingelogd</h3>
+          <div class="user-profile">
+            <div class="avatar" id="user-avatar">?</div>
+            <div>
+              <strong id="user-name">—</strong>
+              <p id="user-email" class="muted"></p>
+              <p id="user-expiry" class="muted"></p>
+            </div>
+          </div>
+          <div class="actions" style="margin-top:1rem">
+            <button type="button" class="btn btn-primary" id="open-mijn-ah">Open Mijn AH</button>
+            <button type="button" class="btn btn-secondary" id="open-swagger">Open Swagger UI</button>
+            <button type="button" class="btn btn-ghost" id="dashboard-logout">Uitloggen</button>
+          </div>
+        </div>
+
+        <div class="card" id="login-prompt-card">
+          <h3>Snel starten</h3>
+          <ul>
+            <li>Klik op <strong>Inloggen met Albert Heijn</strong> — je wordt doorgestuurd naar login.ah.nl.</li>
+            <li>Na inloggen worden tokens automatisch opgehaald en opgeslagen.</li>
+            <li>Access tokens worden op de achtergrond vernieuwd.</li>
+          </ul>
+          <div class="actions" style="margin-top:1rem">
+            <button type="button" class="btn btn-primary" id="quick-login">Inloggen met Albert Heijn</button>
+            <button type="button" class="btn btn-secondary" id="quick-mijn-ah">Mijn AH</button>
+            <button type="button" class="btn btn-secondary" id="quick-wizard">Token stappenplan</button>
+            <button type="button" class="btn btn-secondary" id="quick-guest">Doorgaan als gast</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Beschikbare categorieën</h3>
+          <div class="tag-grid" id="tag-grid"></div>
+        </div>
+      </section>
+
+      <section id="mijn-ah-page" class="page">
+        <div id="mijn-ah-content"></div>
+      </section>
+
+      <section id="financieel-page" class="page">
+        <div id="financieel-content"></div>
+      </section>
+
+      <section id="lijst-page" class="page">
+        <div id="lijst-content"></div>
+      </section>
+
+      <section id="bonus-page" class="page">
+        <div id="bonus-content"></div>
+      </section>
+
+      <section id="koopjes-page" class="page">
+        <div id="koopjes-content"></div>
+      </section>
+
+      <section id="hass-page" class="page">
+        <div id="hass-content"></div>
+      </section>
+
+      <section id="login-page" class="page">
+        <div class="hero">
+          <h2>Inloggen</h2>
+          <p>
+            Eén klik opent het officiële AH-inlogscherm. Na succesvol inloggen hoef je niets meer te plakken —
+            alles wordt automatisch afgehandeld.
+          </p>
+        </div>
+
+        <div class="card login-card">
+          <div id="login-idle">
+            <div class="login-actions">
+              <button type="button" class="btn btn-primary btn-large" id="start-login">
+                Inloggen met Albert Heijn
+              </button>
+              <button type="button" class="btn btn-secondary btn-large" id="start-guest">
+                Doorgaan als gast (anoniem)
+              </button>
+              <button type="button" class="btn btn-secondary btn-large" id="goto-wizard">
+                Token zelf aanleveren (stappenplan)
+              </button>
+            </div>
+            <p class="muted" style="margin-top:1rem">
+              Gastmodus werkt voor beperkte endpoints. Voor bonnetjes, bonusbox en je profiel heb je een echt account nodig.
+            </p>
+          </div>
+
+          <div id="login-loading" hidden>
+            <div class="loading-box">
+              <div class="spinner"></div>
+              <strong id="login-loading-text">Bezig met inloggen…</strong>
+              <p class="muted" id="login-loading-hint">Voltooi het inloggen in het popup-venster.</p>
+              <button type="button" class="btn btn-ghost" id="cancel-login" style="margin-top:0.5rem">Annuleren</button>
+            </div>
+          </div>
+
+          <div id="login-success" hidden>
+            <div class="success-box">
+              <strong id="login-success-title">Ingelogd!</strong>
+              <p class="muted" id="login-success-text"></p>
+            </div>
+            <div class="actions" style="margin-top:1rem">
+              <button type="button" class="btn btn-primary" data-goto="swagger-page">Naar Swagger UI</button>
+              <button type="button" class="btn btn-ghost" id="login-logout">Uitloggen</button>
+            </div>
+          </div>
+
+          <div id="login-error" class="error-box" hidden>
+            <strong>Inloggen mislukt</strong>
+            <p id="login-error-text" class="muted"></p>
+            <div class="actions" style="margin-top:0.75rem">
+              <button type="button" class="btn btn-secondary" id="retry-login">Opnieuw proberen</button>
+            </div>
+          </div>
+        </div>
+
+        <details class="card advanced-panel">
+          <summary>Geavanceerd: snelle invoer</summary>
+          <div class="token-form" style="margin-top:1rem">
+            <label>
+              Autorisatiecode of volledige redirect-URL
+              <input id="manual-code" placeholder="appie://login-exit?code=… of alleen de code" />
+            </label>
+            <label>
+              Refresh token (optioneel)
+              <textarea id="manual-refresh" placeholder="Alleen nodig als je al een refresh token hebt"></textarea>
+            </label>
+            <div class="actions">
+              <button type="button" class="btn btn-secondary" id="manual-exchange">Code inwisselen</button>
+              <button type="button" class="btn btn-secondary" id="manual-refresh-btn">Refresh token gebruiken</button>
+            </div>
+          </div>
+        </details>
+      </section>
+
+      <section id="token-wizard-page" class="page">
+        <div class="hero">
+          <h2>Token stappenplan</h2>
+          <p>
+            Volg dit interactieve stappenplan om zelf je token aan te leveren.
+            Kies een methode, vink stappen af, plak je token — en wij doen de rest.
+          </p>
+        </div>
+
+        <div class="card wizard-card">
+          <div id="wizard-progress" class="wizard-progress"></div>
+          <div id="wizard-content" class="wizard-content"></div>
+          <div id="wizard-footer" class="wizard-footer"></div>
+          <div id="wizard-result" class="wizard-result" hidden></div>
+        </div>
+
+        <div class="actions" style="margin-top:1rem">
+          <button type="button" class="btn btn-ghost" id="wizard-reset">Stappenplan resetten</button>
+          <button type="button" class="btn btn-secondary" data-goto="swagger-page">Naar Swagger UI</button>
+        </div>
+      </section>
+
+      <section id="swagger-page" class="page">
+        <div class="swagger-wrap">
+          <div class="swagger-toolbar">
+            <div>
+              <strong>Swagger UI</strong>
+              <p style="color:var(--text-muted);font-size:0.9rem;margin-top:0.2rem">
+                Try it out — requests worden via de Docker-proxy naar api.ah.nl gestuurd.
+              </p>
+            </div>
+            <div id="swagger-token-status"></div>
+          </div>
+          <div id="swagger-ui"></div>
+        </div>
+      </section>
+
+      <section id="help-page" class="page">
+        <div class="card">
+          <h3>Docker starten</h3>
+          <pre class="code-block">cd d:\ah
+docker compose up --build</pre>
+          <p style="margin-top:0.75rem">Open daarna <strong>http://localhost:38472</strong></p>
+        </div>
+
+        <div class="card">
+          <h3>Hoe inloggen werkt</h3>
+          <ul>
+            <li>Je logt in via het officiële <strong>login.ah.nl</strong> scherm (inclusief hCaptcha indien nodig).</li>
+            <li>De app vangt de OAuth-code op en wisselt die automatisch in voor tokens.</li>
+            <li>Tokens worden opgeslagen in Docker en automatisch vernieuwd.</li>
+            <li>Als het popup-venster geblokkeerd wordt, gebruik het <strong>Token stappenplan</strong>.</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>Belangrijk</h3>
+          <ul>
+            <li>Dit is geen officiële AH API — gebruik op eigen risico.</li>
+            <li>De OpenAPI-spec kan verouderd zijn t.o.v. de live app.</li>
+          </ul>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="https://unpkg.com/swagger-ui-dist@5.11.0/swagger-ui-bundle.js"></script>
+  <script src="https://unpkg.com/swagger-ui-dist@5.11.0/swagger-ui-standalone-preset.js"></script>
+  <script src="/js/mijn-ah.js"></script>
+  <script src="/js/financieel.js"></script>
+  <script src="/js/product.js"></script>
+  <script src="/js/lijst.js"></script>
+  <script src="/js/bonus.js"></script>
+  <script src="/js/koopjes.js"></script>
+  <script src="/js/hass.js"></script>
+  <script src="/js/app.js"></script>
+  <script src="/js/token-wizard.js"></script>
+</body>
+</html>

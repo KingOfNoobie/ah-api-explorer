@@ -1,0 +1,43 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    volumes:
+      - ./data:/data
+    dns:
+      - 127.0.0.11
+      - 1.1.1.1
+    restart: unless-stopped
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:3001/api/auth/status').then((r)=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+
+  ah-explorer:
+    build: .
+    ports:
+      - "0.0.0.0:${AH_EXPLORER_PORT:-38472}:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    dns:
+      - 127.0.0.11
+      - 1.1.1.1
+    volumes:
+      - ./spec/ah-openapi.yaml:/usr/share/nginx/html/spec/ah-openapi.yaml:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "-", "http://127.0.0.1/"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s

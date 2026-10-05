@@ -1,0 +1,6 @@
+{
+  "name": "Albert Heijn Explorer",
+  "render_readme": true,
+  "homeassistant": "2023.8.0",
+  "zip_release": false
+}

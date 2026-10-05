@@ -1,0 +1,21 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Inloggen bij Albert Heijn",
+        "description": "1. Open deze link op je telefoon of computer:\n{login_url}\n\n2. Log in bij Albert Heijn.\n\n3. Je browser toont een fout met `appie://login-exit?code=...` — dat is normaal.\n\n4. Kopieer de **volledige appie:// URL** (of alleen de code) en plak die hieronder.",
+        "data": {
+          "redirect": "appie:// redirect URL of code"
+        }
+      }
+    },
+    "error": {
+      "invalid_redirect": "Kon geen geldige code vinden. Plak de volledige appie://login-exit?code=... URL.",
+      "invalid_auth": "Inloggen mislukt. De code is verlopen of ongeldig — probeer opnieuw.",
+      "unknown": "Onbekende fout bij inloggen."
+    },
+    "abort": {
+      "already_configured": "Dit AH-account is al gekoppeld."
+    }
+  }
+}

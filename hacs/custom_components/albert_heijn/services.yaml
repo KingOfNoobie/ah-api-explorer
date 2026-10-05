@@ -1,0 +1,37 @@
+activate_all_bonus:
+  name: Activeer alle bonusaanbiedingen
+  description: Activeert alle activeerbare bonusbox- of persoonlijke bonusaanbiedingen.
+  fields:
+    config_entry:
+      required: true
+      selector:
+        config_entry:
+          integration: albert_heijn
+    source:
+      default: bonusbox
+      selector:
+        select:
+          options:
+            - bonusbox
+            - personalBonus
+activate_bonus:
+  name: Activeer één bonusaanbieding
+  description: Activeert een specifieke bonusaanbieding op basis van offer/segment ID.
+  fields:
+    config_entry:
+      required: true
+      selector:
+        config_entry:
+          integration: albert_heijn
+    offer_id:
+      required: true
+      selector:
+        text:
+    segment_id:
+      required: true
+      selector:
+        text:
+    start_date:
+      required: true
+      selector:
+        text:
